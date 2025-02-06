@@ -2,40 +2,32 @@
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace HR.LeaveManagement.Api.Middleware
 {
-    public class ExceptionMiddleware
+    public class ExceptionMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
-        public ExceptionMiddleware(RequestDelegate next)
-        {
-            _next = next;
-        }
         public async Task InvokeAsync(HttpContext httpContext)
         {
             try
             {
-                await _next(httpContext);
-            }
-            catch (Exception ex)
+                await next(httpContext);
+            } catch (Exception ex)
             {
                 await HandleExceptionAsync(httpContext, ex);
             }
         }
-        private Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
-            HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
-            string result = JsonConvert.SerializeObject(new ErrorDeatils 
-                { 
-                    ErrorMessage = exception.Message, 
-                    ErrorType = "Failure" 
-                });
+            var statusCode = HttpStatusCode.InternalServerError;
+            var result = JsonConvert.SerializeObject(new ErrorDeatils
+            {
+                ErrorMessage = exception.Message,
+                ErrorType = "Failure"
+            });
 
             switch (exception)
             {
