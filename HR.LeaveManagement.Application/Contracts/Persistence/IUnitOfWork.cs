@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HR.LeaveManagement.Application.Contracts.Persistence
@@ -8,6 +9,6 @@ namespace HR.LeaveManagement.Application.Contracts.Persistence
         ILeaveAllocationRepository LeaveAllocationRepository { get; }
         ILeaveRequestRepository LeaveRequestRepository { get; }
         ILeaveTypeRepository LeaveTypeRepository { get; }
-        Task Save();
+        Task Save(CancellationToken cancellationToken = default);
     }
 }

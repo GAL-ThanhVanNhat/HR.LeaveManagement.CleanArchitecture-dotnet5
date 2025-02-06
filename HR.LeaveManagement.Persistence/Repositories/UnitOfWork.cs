@@ -5,6 +5,7 @@ using HR.LeaveManagement.Application.Contracts.Persistence;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HR.LeaveManagement.Persistence.Repositories
@@ -38,7 +39,7 @@ namespace HR.LeaveManagement.Persistence.Repositories
             GC.SuppressFinalize(this);
         }
 
-        public async Task Save() 
+        public async Task Save(CancellationToken cancellationToken = default) 
         {
             var username = _httpContextAccessor.HttpContext.User.FindFirst(CustomClaimTypes.Uid)?.Value;
 
